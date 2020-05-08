@@ -1,6 +1,4 @@
-while ()
-
-
+import time
 
 
 class Count:
@@ -17,3 +15,17 @@ class Count:
 
     def ball(self):
         self.ball += 1
+
+
+def atbat(batter, pitcher):
+    # Create new count for each a/b
+    count = Count()
+    while count.ball < 4 and count.strike < 3:
+        pitcher.throwpitch()
+        time.sleep(2)
+
+
+
+
+
+

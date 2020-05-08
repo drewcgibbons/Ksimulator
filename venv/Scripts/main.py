@@ -1,5 +1,5 @@
-from Baseball import pitch
+import Baseball.menus.mainmenu as n
+import msvcrt
 
-x = pitch.makepitch()
 
-print(x._type, x._speed, "MPH")
+n.mainmenu()
