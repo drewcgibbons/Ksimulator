@@ -1,2 +1,0 @@
-class Inning:
-    pass
