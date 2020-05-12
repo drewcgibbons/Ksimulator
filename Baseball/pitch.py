@@ -1,7 +1,12 @@
 import random
 
+
 class Pitcher:
     # decides the pitch
+
+    def __init__(self, name):
+        self.name = name
+
     def makepitch(self):
         i = random.randint(1, 100)
 
@@ -20,14 +25,16 @@ class Pitcher:
         else:
             return Forkball()
 
+    def pitch(self, count):
+        return self.throwaipitch(count)
 
     # AI pitch
     # TODO: Make count actually impact pitch location
     def throwaipitch(self, count):
         pitch = self.makepitch()
-        location = Location(count, -1, -1, ai=True)
-        self.throwpitch(pitch, location)
-
+        pitch.location = Location(count, -1, -1, ai=True)
+        pitch.isstrike = pitch.location.instrikezone
+        return pitch
 
     # User Pitch
     def throwuserpitch(self, pitchnum, location):
@@ -47,16 +54,17 @@ class Pitcher:
         elif pitchnum == 6:
             pitch = Forkball()
 
-
     # show the pitch thrown
     def showpitch(self, pitch):
-        print(pitch.type, pitch.speed, "MPH")
+        print(pitch._type, pitch.speed, "MPH")
 
 
 # Pitch definitions
 class Pitch:
     def __init__(self, minspeed, maxspeed):
         self._speed = random.randint(minspeed, maxspeed)
+        self.location = None
+        self.isstrike = False
 
     @property
     def speed(self):
@@ -119,6 +127,7 @@ class Changeup(Pitch):
 # x,y location of pitch (0,0 is top left) with ai flag
 class Location:
     def __init__(self, count, x, y, ai):
+        self.instrikezone = None
         if not ai:
             self.x = x
             self.y = y
@@ -129,10 +138,13 @@ class Location:
     def weightlocation(self, count):
         rand = random.randint(1,100)
         # Throw a strike
-        if rand <= 80:
+        if rand <= 60:
             self.x = random.randint(1, 3)
             self.y = random.randint(1, 3)
+            self.instrikezone = True
         # Throw a ball
         else:
-            self.x = 0 if random.randint(0, 1) == 1 else 4
-            self.y = 0 if random.randint(0, 1) == 1 else 4
+            self.x = 0 if random.randint(0, 1) == 0 else 4
+            self.y = 0 if random.randint(0, 1) == 0 else 4
+            self.instrikezone = False
+

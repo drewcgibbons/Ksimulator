@@ -2,6 +2,7 @@ import Baseball.pitch as bp
 import random
 
 
+#TODO: Add Batter traits and statistic keeping
 class Batter:
     def __init__(self, name):
         self.name = name
@@ -11,12 +12,12 @@ class Batter:
         actint = -10
         i = random.randint(1, 100)
         if pitch.isstrike:
-            if i < 70:
+            if i < 65:
                 actint = self.take()
             else:
                 actint = self.swing(pitch)
         else:
-            if i < 85:
+            if i < 75:
                 actint = self.take()
             else:
                 actint = self.swing(pitch)
@@ -57,19 +58,19 @@ class Swing:
 
 # determines result of swing
 def swingresult(pitch, swing):
-    result = random.randint(1, 165)
+    result = random.randint(1, 100)
     # Guaranteed Hit
     if pitch.location.x == swing.x and pitch.location.y == swing.y:
         hitresult = -10
 
         # single = 1, double = 2, triple = 3, HR = 4
-        if result <= 50:
+        if result <= 40:
             return 1
-        elif result <= 80:
+        elif result <= 70:
             return 2
-        elif result <= 82:
+        elif result <= 75:
             return 3
-        elif result <= 100:
+        elif result <= 90:
             return 4
         else:
             return 5
@@ -79,15 +80,15 @@ def swingresult(pitch, swing):
     # -3 ground out
     # -4 lineout
     elif pitch.location.x == swing.x and pitch.location.y < swing.y:
-        if result <= 50:
+        if result <= 20:
             return -3
-        elif result <= 80:
+        elif result <= 35:
             return -1
-        elif result <= 90:
+        elif result <= 60:
             return -4
-        elif result <= 95:
+        elif result <= 70:
             return 1
-        elif result <= 100:
+        elif result <= 80:
             return 2
         else:
             return 5
@@ -98,15 +99,15 @@ def swingresult(pitch, swing):
     # -3 ground out
     # -4 lineout
     elif pitch.location.x == swing.x and pitch.location.y > swing.y:
-        if result <= 60:
+        if result <= 30:
             return -2
-        elif result <= 85:
+        elif result <= 45:
             return -1
-        elif result <= 93:
+        elif result <= 60:
             return 1
-        elif result <= 97:
+        elif result <= 70:
             return 4
-        elif result <= 100:
+        elif result <= 80:
             return 2
         else:
             return 5
@@ -118,31 +119,31 @@ def swingresult(pitch, swing):
     # -3 ground out
     # -4 lineout
     elif pitch.location.x != swing.x and pitch.location.y == swing.y:
-        if result <= 45:
+        if result <= 25:
             return -1
-        elif result <= 70:
+        elif result <= 50:
             return -4
-        elif result <= 85:
+        elif result <= 65:
             return 2
-        elif result <= 97:
+        elif result <= 75:
             return 1
-        elif result <= 99:
+        elif result <= 80:
             return 4
-        elif result <= 100:
+        elif result <= 81:
             return 3
         else:
             return 5
 
     elif pitch.location.x != swing.x and pitch.location.y != swing.y:
-        if result <= 45:
+        if result <= 25:
             return -2
-        elif result <= 80:
+        elif result <= 40:
             return -3
-        elif result <= 85:
+        elif result <= 55:
             return -4
-        elif result <= 99:
+        elif result <= 60:
             return 1
-        elif result <= 100:
+        elif result <= 65:
             return 2
         else:
             return 5

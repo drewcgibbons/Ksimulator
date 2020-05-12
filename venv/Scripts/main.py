@@ -1,5 +1,3 @@
-import Baseball.menus.mainmenu as n
-import msvcrt
+import Baseball as bb
 
-
-n.mainmenu()
+bb.mainmenu.mainmenu()

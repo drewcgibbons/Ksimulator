@@ -1,5 +1,6 @@
 import Baseball.atbat as ab
 import time
+import random
 
 
 class Inning:
@@ -15,6 +16,47 @@ class Inning:
     # pass in an inning parameter
     def addout(self):
         self.numouts += 1
+
+    def trysteal(self):
+        stealattempt = random.randint(1, 100)
+
+        if self.bases.firstoccupied() and not self.bases.secondoccupied():
+            if stealattempt > 65:
+                print(self.bases.first, "is trying to steal second")
+                time.sleep(.5)
+
+                # Try to throw out runner
+                throwattempt = random.randint(66, 78)
+
+                # Caught stealing
+                if throwattempt > stealattempt:
+                    print("OUT!", self.bases.first, "is caught stealing")
+                    self.bases.first = None
+                    self.addout()
+                else:
+                    print(self.bases.first, "stole second")
+                    self.bases.second = self.bases.first
+                    self.bases.first = None
+                    time.sleep(.5)
+
+        elif self.bases.secondoccupied() and not self.bases.thirdoccupied():
+            if stealattempt > 85:
+                print(self.bases.second, "is trying to steal third")
+                time.sleep(.5)
+
+                # Try to throw out runner
+                throwattempt = random.randint(86, 92)
+
+                # Caught stealing
+                if throwattempt > stealattempt:
+                    print("OUT!", self.bases.second, "is caught stealing")
+                    self.bases.second = None
+                    self.addout()
+                else:
+                    print(self.bases.first, "stole third")
+                    self.bases.third = self.bases.second
+                    self.bases.second = None
+                    time.sleep(.5)
 
     def showbases(self):
         if self.bases.firstoccupied() and self.bases.secondoccupied() and self.bases.thirdoccupied():
@@ -32,9 +74,9 @@ class Inning:
         elif self.bases.firstoccupied():
             print("Man on first")
 
-
     def updatebases(self, baserunner, numbases):
         runstoadd = 0
+        # Single
         if numbases == 1:
             # update other bases and then add new runner
             # TODO: Add so that runners move varying amounts of bases
@@ -52,6 +94,25 @@ class Inning:
                 self.bases.first = None
 
             self.bases.first = baserunner
+
+        # Walk
+        # Must check iteratively for walks
+        elif numbases == 6:
+            if self.bases.firstoccupied():
+                if self.bases.secondoccupied():
+                    if self.bases.thirdoccupied():
+                        self.bases.third = None
+                        runstoadd +=1
+                    self.bases.third = self.bases.second
+                    self.bases.second = None
+                self.bases.second = self.bases.first
+                self.bases.first = None
+            self.bases.first = baserunner
+
+
+
+            self.bases.first = baserunner
+
 
         elif numbases == 2:
             if self.bases.thirdoccupied():
@@ -101,15 +162,15 @@ class Inning:
             print(baserunner, "scores")
             runstoadd += 1
 
-            if self.frame == "Top":
-                self.score.awayscore += runstoadd
-            else:
-                self.score.homescore += runstoadd
-
             if runstoadd > 0:
+                if self.frame == "Top":
+                    self.score.awayscore += runstoadd
+                else:
+                    self.score.homescore += runstoadd
                 self.score.showscore()
 
             self.runs += runstoadd
+            time.sleep(2)
 
     def showinning(self):
         print(self.frame, end='')
@@ -122,11 +183,8 @@ class Inning:
         else:
             print(" " + str(self.num) + "th")
 
-
-
     def playinning(self, hometeam, awayteam, score):
         self.score = score
-
         self.showinning()
         self.score.showscore()
 
@@ -136,10 +194,22 @@ class Inning:
             if i > 9:
                 i = 1
 
+            # Check for walkoff starting in bottom of 9th
+            if self.checkwalkoff():
+                return
+
             # Get ith batter out of lineup
             self.showinning()
             print(self.numouts, "outs")
             self.showbases()
+            print()
+
+            # Steal and recheck outs
+            self.trysteal()
+            if self.numouts >= 3:
+                break
+
+            # At bat
             result = ab.atbat("Batter " + str(i), "Pitcher")
 
             if result == 0:
@@ -148,10 +218,14 @@ class Inning:
                 self.updatebases("Batter" + str(i), result)
 
             time.sleep(1)
-
             i += 1
 
         print("End of inning")
+        return i
+
+    def checkwalkoff(self):
+        if self.num >= 9 and self.frame == "Bottom" and self.score.homescore > self.score.awayscore:
+            return True
 
 
 class Bases:

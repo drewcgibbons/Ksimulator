@@ -32,14 +32,14 @@ def atbat(battername, pitchername):
 
     while count.ball < 4 and count.strike < 3:
         count.showcount()
-        time.sleep(0.75)
+        time.sleep(0.25)
 
         # Pitch and show results
         pitch = pitcher.pitch(count)
         pitcher.showpitch(pitch)
         batteraction = batter.action(pitch)
 
-        time.sleep(0.75)
+        time.sleep(0.25)
         if batteraction == 0:
             pitchval = processpitch(pitch)
 
@@ -81,7 +81,7 @@ def atbat(battername, pitchername):
             return 0
 
         elif batteraction == 5:
-            print("Strike Swinging")
+            print("Strike Swinging\n")
             count.addstrike()
 
         if batteraction <= -2:
@@ -90,7 +90,7 @@ def atbat(battername, pitchername):
     #FIXME: WALK ACTS LIKE SINGLE, NEEDS SPECIAL CHECKING
     if count.ball == 4:
         print("Walk\n")
-        return 1
+        return 6
 
     if count.strike == 3:
         print("Strikeout\n")
@@ -100,8 +100,8 @@ def atbat(battername, pitchername):
 # 1 is strike 0 is ball
 def processpitch(pitch):
     if pitch.isstrike:
-        print("Strike")
+        print("Strike\n")
         return 1
     else:
-        print("Ball")
+        print("Ball\n")
         return 0
