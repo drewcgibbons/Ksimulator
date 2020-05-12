@@ -1,5 +1,7 @@
 import Baseball.inning as bi
 import Baseball.score as bs
+import Baseball.team as bt
+
 
 class Game:
     def __init__(self, hometeam, awayteam):
@@ -12,7 +14,7 @@ class Game:
 
     def runGame(self):
         # Initialize inning array
-        score = bs.Score(self.hometeam, self.awayteam)
+        score = bs.Score(self.hometeam.name, self.awayteam.name)
 
         # Game is inning list, odd indicies are top, even are bottom
         game = list()

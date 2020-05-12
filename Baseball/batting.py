@@ -2,7 +2,7 @@ import Baseball.pitch as bp
 import random
 
 
-#TODO: Add Batter traits and statistic keeping
+# TODO: Add Batter traits and statistic keeping, incorporate with player class
 class Batter:
     def __init__(self, name):
         self.name = name
