@@ -7,15 +7,16 @@ def mainmenu():
     while True:
         print("Use the keyboard to select the following (and press enter)")
         print("1.) Play")
-        print("2.) Watch Simulation")
-        print("3.) Exit")
+        print("2.) Watch Simulated Game")
+        print("3.) Watch Simulated Series")
+        print("4.) Exit")
         key = input()
 
         teamtags = data.TeamDict().teamdict
 
         if key == '1':
             pass
-        if key == '2':
+        elif key == '2':
             # Corresponds w teamdict
             tags = teamselect()
             # Cancelled menu input
@@ -28,7 +29,21 @@ def mainmenu():
 
             game = bg.Game(hometeam, awayteam)
             game.runGame()
-        if key == '3':
+        elif key == '3':
+            # Corresponds w teamdict
+            tags = teamselect()
+            # Cancelled menu input
+            if tags is None or len(tags) != 2:
+                continue
+
+            # Intialize with corresponding teamtags in Data
+            hometeam = team.Team(teamtags[tags[0]][0], teamtags[tags[0]][1])
+            awayteam = team.Team(teamtags[tags[1]][0], teamtags[tags[1]][1])
+
+            series = bg.Series(hometeam, awayteam)
+            series.playseries()
+
+        elif key == '4':
             break
 
 def teamselect():
@@ -77,12 +92,12 @@ def teamselect():
 
 
 def showdivmenu():
-    print("1.) NL East")
-    print("2.) NL Central")
-    print("3.) NL West")
-    print("4.) AL East")
-    print("5.) AL Central")
-    print("6.) AL West")
+    print("1.) AL East")
+    print("2.) AL Central")
+    print("3.) AL West")
+    print("4.) NL East")
+    print("5.) NL Central")
+    print("6.) NL West")
     print("7.) Go Back")
 
 
@@ -93,41 +108,41 @@ def showdivteams(divnum):
         print("Select a team")
 
         if divnum == 1:
-            print("1.) Atlanta Braves")
-            print("2.) Miami Marlins")
-            print("3.) New York Mets")
-            print("4.) Philadelphia Phillies")
-            print("5.) Washington Nationals")
-        elif divnum == 2:
-            print("1.) Chicago Cubs")
-            print("2.) Cincinnati Reds")
-            print("3.) Milwaukee Brewers")
-            print("4.) Pittsburgh Pirates")
-            print("5.) St. Louis Cardinals")
-        elif divnum == 3:
-            print("1.) Arizona Diamondbacks")
-            print("2.) Colorado Rockies")
-            print("3.) LA Dodgers")
-            print("4.) San Diego Padres")
-            print("5.) San Francisco Giants")
-        elif divnum == 4:
             print("1.) Baltimore Orioles")
             print("2.) Boston Red Sox")
             print("3.) New York Yankees")
             print("4.) Tampa Bay Rays")
             print("5.) Toronto Blue Jays")
-        elif divnum == 5:
+        elif divnum == 2:
             print("1.) Cleveland Indians")
             print("2.) Chicago White Sox")
             print("3.) Detroit Tigers")
             print("4.) Kansas City Royals")
             print("5.) Minnesota Twins")
-        elif divnum == 6:
+        elif divnum == 3:
             print("1.) Houston Astros")
             print("2.) LA Angels")
             print("3.) Oakland Athletics")
             print("4.) Seattle Mariners")
             print("5.) Texas Rangers")
+        elif divnum == 4:
+            print("1.) Atlanta Braves")
+            print("2.) Miami Marlins")
+            print("3.) New York Mets")
+            print("4.) Philadelphia Phillies")
+            print("5.) Washington Nationals")
+        elif divnum == 5:
+            print("1.) Chicago Cubs")
+            print("2.) Cincinnati Reds")
+            print("3.) Milwaukee Brewers")
+            print("4.) Pittsburgh Pirates")
+            print("5.) St. Louis Cardinals")
+        elif divnum == 6:
+            print("1.) Arizona Diamondbacks")
+            print("2.) Colorado Rockies")
+            print("3.) LA Dodgers")
+            print("4.) San Diego Padres")
+            print("5.) San Francisco Giants")
         print("6.) Go Back")
 
         key = input()

@@ -22,13 +22,13 @@ class Count:
         print(self.ball, "-", self.strike)
 
 # 1 is out
-def atbat(battername, pitchername):
+def atbat(batter, pitchername):
     # Create new count for each a/b
     pitcher = bp.Pitcher(pitchername)
-    batter = bb.Batter(battername)
-    count = Count()
 
-    print("At Bat: ", batter.name)
+    count = Count()
+    #TODO: add stealing here
+    print("At Bat: ", batter.fullname)
 
     while count.ball < 4 and count.strike < 3:
         count.showcount()
@@ -39,7 +39,6 @@ def atbat(battername, pitchername):
         pitcher.showpitch(pitch)
         batteraction = batter.action(pitch)
 
-        time.sleep(0.25)
         if batteraction == 0:
             pitchval = processpitch(pitch)
 
@@ -47,25 +46,32 @@ def atbat(battername, pitchername):
                 count.addstrike()
             elif pitchval == 0:
                 count.addball()
+            time.sleep(0.25)
 
         elif batteraction == -1:
-            print(batter.name, "fouls the pitch away\n")
+            print(batter.lastname, "fouls the pitch away\n")
             count.addfoul()
+            time.sleep(0.25)
 
         elif batteraction > 0 and batteraction != 4 and batteraction != 5:
             print("Hit!\n")
+            time.sleep(0.25)
             if batteraction == 1:
-                print(batter.name, "gets on with a single\n")
+                print(batter.lastname, "gets on with a single\n")
+                time.sleep(0.25)
                 return 1
             elif batteraction == 2:
-                print(batter.name, "gets on with a double\n")
+                print(batter.lastname, "gets on with a double\n")
+                time.sleep(0.25)
                 return 2
             elif batteraction == 3:
-                print(batter.name, "gets on with a triple\n")
+                print(batter.lastname, "gets on with a triple\n")
+                time.sleep(0.25)
                 return 3
 
         elif batteraction == 4:
             print("HOMERUN!\n")
+            time.sleep(1)
             return 4
 
         elif batteraction < -1:
@@ -73,15 +79,19 @@ def atbat(battername, pitchername):
             # -3 ground out
             # -4 lineout
             if batteraction == -2:
-                print(batter.name, "flies out\n")
+                print(batter.lastname, "flies out\n")
+                time.sleep(0.25)
             elif batteraction == -3:
-                print(batter.name, "grounds out\n")
+                print(batter.lastname, "grounds out\n")
+                time.sleep(0.25)
             else:
-                print(batter.name, "lines out\n")
+                print(batter.lastname, "lines out\n")
+                time.sleep(0.25)
             return 0
 
         elif batteraction == 5:
             print("Strike Swinging\n")
+            time.sleep(0.25)
             count.addstrike()
 
         if batteraction <= -2:
@@ -90,10 +100,12 @@ def atbat(battername, pitchername):
     #FIXME: WALK ACTS LIKE SINGLE, NEEDS SPECIAL CHECKING
     if count.ball == 4:
         print("Walk\n")
+        time.sleep(.25)
         return 6
 
     if count.strike == 3:
         print("Strikeout\n")
+        time.sleep(.25)
         return 0
 
 

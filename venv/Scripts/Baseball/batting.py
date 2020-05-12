@@ -1,11 +1,16 @@
 import Baseball.pitch as bp
 import random
+import time
 
 
-# TODO: Add Batter traits and statistic keeping, incorporate with player class
-class Batter:
-    def __init__(self, name):
-        self.name = name
+#TODO: Add Batter traits and statistic keeping, incorporate with player class
+class Batter():
+    def __init__(self, fname, lname, position):
+        self._firstname = fname
+        self._lastname = lname
+        self._fullname = fname + " " + lname
+        self._position = position
+
 
     # returns integer actint to determine what happened
     def action(self, pitch):
@@ -34,10 +39,31 @@ class Batter:
     # -4 lineout
     # -5 strike swinging
     def swing(self, pitch):
-        print(self.name, "swings!")
+        print(self._lastname, "swings!")
+        time.sleep(.5)
         result = -10
         batterswing = Swing(-1, -1, pitch, ai=True)
         return swingresult(pitch, batterswing)
+
+
+    @property
+    def firstname(self):
+        return self._firstname
+
+
+    @property
+    def lastname(self):
+        return self._lastname
+
+
+    @property
+    def fullname(self):
+        return self._fullname
+
+
+    @property
+    def position(self):
+        return self._position
 
 
 class Swing:

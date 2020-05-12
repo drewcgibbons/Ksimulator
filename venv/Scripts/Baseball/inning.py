@@ -4,14 +4,60 @@ import random
 
 
 class Inning:
-    def __init__(self, frame, num, score, battingpos):
+    def __init__(self, frame, num, score, team, battingpos):
         self.frame = frame
         self.num = num
+        self.team = team
         self.numouts = 0
         self.bases = Bases()
         self.score = score
         self.runs = 0
         self.battingpos = battingpos
+
+    # RETURN VALUE IS POSITION IN BATTING ORDER
+    def playinning(self, hometeam, awayteam, score):
+        self.score = score
+        self.showinning()
+        self.score.showscore()
+
+        i = self.battingpos
+        while self.numouts < 3:
+            # Reset lineup
+            if i > 9:
+                i = 1
+
+            # Check for walkoff starting in bottom of 9th
+            if self.checkwalkoff():
+                return
+
+            # Get ith batter out of lineup
+            self.showinning()
+            print(self.numouts, "outs")
+            self.showbases()
+            print()
+            time.sleep(1)
+
+            # Steal and recheck outs
+            self.trysteal()
+            if self.numouts >= 3:
+                break
+
+            # At bat
+            result = ab.atbat(self.team.battingorder[i], "Pitcher")
+
+            if result == 0:
+                self.addout()
+            else:
+                self.updatebases(self.team.battingorder[i], result)
+
+            i += 1
+
+        print("End of inning")
+        return i
+
+    def checkwalkoff(self):
+        if self.num >= 9 and self.frame == "Bottom" and self.score.homescore > self.score.awayscore:
+            return True
 
     # pass in an inning parameter
     def addout(self):
@@ -22,7 +68,7 @@ class Inning:
 
         if self.bases.firstoccupied() and not self.bases.secondoccupied():
             if stealattempt > 65:
-                print(self.bases.first, "is trying to steal second")
+                print(self.bases.first.lastname, "is trying to steal second")
                 time.sleep(.5)
 
                 # Try to throw out runner
@@ -30,18 +76,18 @@ class Inning:
 
                 # Caught stealing
                 if throwattempt > stealattempt:
-                    print("OUT!", self.bases.first, "is caught stealing")
+                    print("OUT!", self.bases.first.lastname, "is caught stealing")
                     self.bases.first = None
                     self.addout()
                 else:
-                    print(self.bases.first, "stole second")
+                    print(self.bases.first.lastname, "stole second")
                     self.bases.second = self.bases.first
                     self.bases.first = None
                     time.sleep(.5)
 
         elif self.bases.secondoccupied() and not self.bases.thirdoccupied():
             if stealattempt > 85:
-                print(self.bases.second, "is trying to steal third")
+                print(self.bases.second.lastname, "is trying to steal third")
                 time.sleep(.5)
 
                 # Try to throw out runner
@@ -49,11 +95,11 @@ class Inning:
 
                 # Caught stealing
                 if throwattempt > stealattempt:
-                    print("OUT!", self.bases.second, "is caught stealing")
+                    print("OUT!", self.bases.second.lastname, "is caught stealing")
                     self.bases.second = None
                     self.addout()
                 else:
-                    print(self.bases.first, "stole third")
+                    print(self.bases.second.lastname, "stole third")
                     self.bases.third = self.bases.second
                     self.bases.second = None
                     time.sleep(.5)
@@ -83,7 +129,7 @@ class Inning:
 
             # ORDER MATTERS HERE, MUST MOVE RUNNER THEN None the base
             if self.bases.thirdoccupied():
-                print(self.bases.third, "scores")
+                print(self.bases.third.lastname, "scores")
                 self.bases.third = None
                 runstoadd += 1
             if self.bases.secondoccupied():
@@ -103,6 +149,7 @@ class Inning:
                     if self.bases.thirdoccupied():
                         self.bases.third = None
                         runstoadd +=1
+                        print(self.bases.third.lastname, "scores")
                     self.bases.third = self.bases.second
                     self.bases.second = None
                 self.bases.second = self.bases.first
@@ -110,17 +157,13 @@ class Inning:
             self.bases.first = baserunner
 
 
-
-            self.bases.first = baserunner
-
-
         elif numbases == 2:
             if self.bases.thirdoccupied():
-                print(self.bases.third, "scores")
+                print(self.bases.third.lastname, "scores")
                 self.bases.third = None
                 runstoadd += 1
             if self.bases.secondoccupied():
-                print(self.bases.second, "scores")
+                print(self.bases.second.lastname, "scores")
                 self.bases.second = None
                 runstoadd += 1
             if self.bases.firstoccupied():
@@ -131,15 +174,15 @@ class Inning:
 
         elif numbases == 3:
             if self.bases.thirdoccupied():
-                print(self.bases.third, "scores")
+                print(self.bases.third.lastname, "scores")
                 self.bases.third = None
                 runstoadd += 1
             if self.bases.secondoccupied():
-                print(self.bases.second, "scores")
+                print(self.bases.second.lastname, "scores")
                 self.bases.second = None
                 runstoadd += 1
             if self.bases.firstoccupied():
-                print(self.bases.first, "scores")
+                print(self.bases.first.lastname, "scores")
                 self.bases.first = None
                 runstoadd += 1
 
@@ -148,29 +191,31 @@ class Inning:
         else:
 
             if self.bases.thirdoccupied():
-                print(self.bases.third, "scores")
+                print(self.bases.third.lastname, "scores")
                 self.bases.third = None
                 runstoadd += 1
             if self.bases.secondoccupied():
-                print(self.bases.second, "scores")
+                print(self.bases.second.lastname, "scores")
                 self.bases.second = None
                 runstoadd += 1
             if self.bases.firstoccupied():
-                print(self.bases.first, "scores")
+                print(self.bases.first.lastname, "scores")
                 self.bases.first = None
                 runstoadd += 1
-            print(baserunner, "scores")
+            print(baserunner.lastname, "scores")
             runstoadd += 1
 
-            if runstoadd > 0:
-                if self.frame == "Top":
-                    self.score.awayscore += runstoadd
-                else:
-                    self.score.homescore += runstoadd
-                self.score.showscore()
+        if runstoadd != 0:
+            if self.frame == "Top":
+                self.score.awayscore += runstoadd
+            else:
+                self.score.homescore += runstoadd
 
-            self.runs += runstoadd
-            time.sleep(2)
+            self.score.showscore()
+            time.sleep(1)
+
+        self.runs += runstoadd
+
 
     def showinning(self):
         print(self.frame, end='')
@@ -183,49 +228,7 @@ class Inning:
         else:
             print(" " + str(self.num) + "th")
 
-    def playinning(self, hometeam, awayteam, score):
-        self.score = score
-        self.showinning()
-        self.score.showscore()
 
-        i = self.battingpos
-        while self.numouts < 3:
-            # Reset lineup
-            if i > 9:
-                i = 1
-
-            # Check for walkoff starting in bottom of 9th
-            if self.checkwalkoff():
-                return
-
-            # Get ith batter out of lineup
-            self.showinning()
-            print(self.numouts, "outs")
-            self.showbases()
-            print()
-
-            # Steal and recheck outs
-            self.trysteal()
-            if self.numouts >= 3:
-                break
-
-            # At bat
-            result = ab.atbat("Batter " + str(i), "Pitcher")
-
-            if result == 0:
-                self.addout()
-            else:
-                self.updatebases("Batter" + str(i), result)
-
-            time.sleep(1)
-            i += 1
-
-        print("End of inning")
-        return i
-
-    def checkwalkoff(self):
-        if self.num >= 9 and self.frame == "Bottom" and self.score.homescore > self.score.awayscore:
-            return True
 
 
 class Bases:
